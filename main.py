@@ -16,21 +16,28 @@ The files have lines that look like this:
 6. Save output from step 5 according to output schema
 """
 from os import path
-
+from models import Engine
 
 OLD_FILE_PATH = path.abspath(r"./inputs/Old_File.txt")
 NEW_FILE_PATH = path.abspath(r"./inputs/New_File.txt")
 OUTPUT_FILE_PATH = path.abspath(r"./outputs/")
 
-example_tag = """C_ALT_COMPILE_CMD:  -c -g -q"""
+example_tag = """C_LINK_CMD:  -g -z -w -x --heap=0x800 --stack=0x400 -m link.map """
+
+example_tag1 = """C_LINK_CMD: lnk2000 -q -c -w -x --heap=0x800 --stack=0x400 -m link.map"""
+example_tag2 = """C_LINK_CMD: cl2000 -g -z -w -x --heap=0x800 --stack=0x400 -m link.map"""
 
 
-def extract_tag(input_line):
-    pass
+def main():
+    compare = Engine(r"./inputs/Old_File.txt", r"./inputs/New_File.txt", r"./outputs/")
+    # compare.start()
+    compare.save_output()
 
-def extract_fields(input_line):
-    pass
+if __name__ == "__main__":
+    main()
 
-print(OLD_FILE_PATH)
-
-
+# TODO: Hook up all the functions
+# TODO: change output_results_to_stdout() to use input as list
+# TODO: finish pass_input_to_output()
+# TODO: refactor get_shared_tags() to be DRY
+# TODO: Add Tag class?
