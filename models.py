@@ -29,7 +29,8 @@ class IO:
         return result
 
     def save_tags_to_output(self):
-        with open(self.OUTPUT_FILE_PATH + "\output.txt", 'w') as output_file:
+        print("Exporting file.")
+        with open(path.join(self.OUTPUT_FILE_PATH, 'output.txt'), 'w') as output_file:
             header_schema = """Date: {}, New_File: {}, Old_File: {}, Total Shared Tags: {}, Tag Differences: {}\n"""
             header_output = header_schema.format(
                 str(datetime.now()),
