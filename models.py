@@ -3,7 +3,6 @@ from datetime import datetime
 
 
 class IO:
-
     def __init__(self, old_file_path, new_file_path, output_file_path):
         self.OLD_FILE_PATH = path.abspath(old_file_path)
         self.NEW_FILE_PATH = path.abspath(new_file_path)
@@ -15,7 +14,6 @@ class IO:
         self.field_changes = 0
         self.shared_tags = self.get_shared_tags()
 
-
     def get_shared_tags(self):
         result = []
         with open(self.OLD_FILE_PATH, 'r') as old_file:
@@ -25,7 +23,8 @@ class IO:
                         current_tag = Tag(old_line, new_line)
                         if current_tag.is_shared_tag():
                             self.total_fields += len(current_tag.existing_field_value)
-                            self.field_changes += (len(current_tag.added_field_values) - len(current_tag.omitted_field_values))
+                            self.field_changes += (
+                                len(current_tag.added_field_values) - len(current_tag.omitted_field_values))
                             result.append(current_tag)
         return result
 
@@ -37,7 +36,7 @@ class IO:
                 self.NEW_FILE_PATH,
                 self.OLD_FILE_PATH,
                 len(self.shared_tags),
-                "% " + str((((self.total_fields + self.field_changes) - self.total_fields)/self.total_fields)*100)
+                "% " + str((((self.total_fields + self.field_changes) - self.total_fields) / self.total_fields) * 100)
             )
             output_file.write(header_output)
             for tag in self.shared_tags:
@@ -46,7 +45,6 @@ class IO:
 
 
 class Tag:
-
     def __init__(self, left_tag_line, right_tag_line):
         self.left_tag_name = self.extract_tag(left_tag_line)
         self.right_tag_name = self.extract_tag(right_tag_line)
@@ -57,7 +55,7 @@ class Tag:
             self.added_field_values = self.get_field_additions()
 
     def __str__(self):
-        OUTPUT_SCHEMA = """
+        output_schema = """
 Tag Name: {}
 Existing Values: {}
 New Values: {}
@@ -70,7 +68,8 @@ Fields Added: {}
         output_omitted_field_values = " ".join(self.omitted_field_values)
         output_added_field_values = " ".join(self.added_field_values)
 
-        output = OUTPUT_SCHEMA.format(output_tag_name, output_existing_field_value, output_new_field_value, output_omitted_field_values, output_added_field_values)
+        output = output_schema.format(output_tag_name, output_existing_field_value, output_new_field_value,
+                                      output_omitted_field_values, output_added_field_values)
 
         return str(output)
 
@@ -93,7 +92,7 @@ Fields Added: {}
             fields = input_line.split(":")[1].replace('\n', '')
             fields_delimited = fields.split(" ")
             return [field_value for field_value in fields_delimited if field_value not in ('', '\n')]
-        return None
+
 
     def get_field_omissions(self) -> list:
         result = []
