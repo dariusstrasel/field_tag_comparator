@@ -26,7 +26,8 @@ class IO:
                             self.field_changes += (
                                 len(current_tag.added_field_values) - len(current_tag.omitted_field_values))
                             result.append(current_tag)
-        return result
+        sorted_result = sorted(result, key=lambda k: k.left_tag_name)
+        return sorted_result
 
     def save_tags_to_output(self):
         print("Exporting file.")
