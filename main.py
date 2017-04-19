@@ -6,7 +6,6 @@ The files have lines that look like this:
     TAG : field-list
 
 1. Compare each file and extract shared tags
-1a. Make note of fields which are shared but unchanged.
 2. Save tag as dictionary to output Python list
 3. Process saved tags and find omissions/additions
 4. Sort output Python list according to tag name
