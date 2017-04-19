@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class IO:
+    """Abstracts logic surrounding the use and manipulation of input data."""
     def __init__(self, old_file_path, new_file_path, output_file_path):
         self.OLD_FILE_PATH = path.abspath(old_file_path)
         self.NEW_FILE_PATH = path.abspath(new_file_path)
@@ -15,6 +16,7 @@ class IO:
         self.shared_tags = self.get_shared_tags()
 
     def get_shared_tags(self):
+        """Returns a sorted list of Tag objects that pass is_shared() inspection."""
         result = []
         with open(self.OLD_FILE_PATH, 'r') as old_file:
             for old_line in old_file:
@@ -30,6 +32,7 @@ class IO:
         return sorted_result
 
     def save_tags_to_output(self):
+        """Writes the individual Tag objects __str__ definition to an output file"""
         print("Exporting file.")
         with open(path.join(self.OUTPUT_FILE_PATH, 'output.txt'), 'w') as output_file:
             header_schema = """Date: {}, New_File: {}, Old_File: {}, Total Shared Tags: {}, Tag Differences: {}\n"""
@@ -47,6 +50,7 @@ class IO:
 
 
 class Tag:
+    """Abstracts logic surrounding the parsing and data structure of a tag element."""
     def __init__(self, left_tag_line, right_tag_line):
         self.left_tag_name = self.extract_tag(left_tag_line)
         self.right_tag_name = self.extract_tag(right_tag_line)
@@ -57,6 +61,7 @@ class Tag:
             self.added_field_values = self.get_field_additions()
 
     def __str__(self):
+        """Used to format sane schema for stdout."""
         output_schema = """
 Tag Name: {}
 Existing Values: {}
@@ -76,6 +81,7 @@ Fields Added: {}
         return str(output)
 
     def is_shared_tag(self) -> bool:
+        """Evaluates a bool to determine if two input tags have the same name."""
         if self.left_tag_name == self.right_tag_name:
             if self.existing_field_value != self.new_field_value:
                 return True
@@ -84,12 +90,14 @@ Fields Added: {}
 
     @staticmethod
     def extract_tag(input_line) -> str:
+        """Returns the tag name by splicing an input line."""
         if input_line is not "":
             tag = input_line.split(":")[0]
             return tag
 
     @staticmethod
     def extract_field(input_line) -> list:
+        """Returns the field values from an input_line."""
         if input_line not in ('', '\n'):
             fields = input_line.split(":")[1].replace('\n', '')
             fields_delimited = fields.split(" ")
@@ -97,6 +105,8 @@ Fields Added: {}
 
 
     def get_field_omissions(self) -> list:
+        """Evaluates a tag objects field omissions by comparing existing and new
+        field values."""
         result = []
         for field in self.existing_field_value:
             if field not in self.new_field_value:
@@ -104,6 +114,8 @@ Fields Added: {}
         return result
 
     def get_field_additions(self) -> list:
+        """Evaluates a tag objects field additions by comparing existing and new
+                field values."""
         result = []
         for field in self.new_field_value:
             if field not in self.existing_field_value:
@@ -112,6 +124,7 @@ Fields Added: {}
 
 
 class Engine:
+    """Simple abstraction used to define easy source of program manipulation."""
     def __init__(self, old_file_path, new_file_path, output_file_path):
         self.input_output = IO(old_file_path, new_file_path, output_file_path)
 

@@ -17,6 +17,8 @@ from models import Engine
 
 
 def main():
+    """Invoke Engine() class by passing in the input filepath and the directory
+    will the final output file will be pushed."""
     compare = Engine(r"./inputs/Old_File.txt", r"./inputs/New_File.txt", r"./outputs/")
     compare.save_output()
 
