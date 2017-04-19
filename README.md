@@ -42,7 +42,7 @@ Fields Added: cl2000 -g -z
 2. Ensure Python 3+ is installed
 3. run main.py as follows:
 
-- MacOS
+- MacOS / Linux
 ```bash
 python3 main.py
 ```
