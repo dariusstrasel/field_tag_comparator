@@ -32,6 +32,15 @@ class TestTagMethods(unittest.TestCase):
         tag = models.Tag(example_tag1, example_tag2)
         self.assertEquals(tag.get_field_additions(), ['cl2000', '-g', '-z'])
 
+
+class TestIOMethods(unittest.TestCase):
+    os.remove(r"./outputs/output.txt")
+    compare = models.IO(r"./inputs/Old_File.txt", r"./inputs/New_File.txt", r"./outputs/")
+
+    def test_output_file(self):
+
+        self.assertTrue(os.path.isfile(r"./outputs/output.txt"))
+
 if __name__ == '__main__':
     unittest.main()
 
