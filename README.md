@@ -35,4 +35,19 @@ Fields Ommitted: lnk2000 -q -c
 Fields Added: cl2000 -g -z 
 ````
    
-##Please sort the output by tag name
+### Please sort the output by tag name
+
+# How to run:
+1. Clone repo
+2. Ensure Python 3+ is installed
+3. run main.py as follows:
+
+- MacOS
+```bash
+python3 main.py
+```
+
+- Windows
+```bash
+python main.py
+```
