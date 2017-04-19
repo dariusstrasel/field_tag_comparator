@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 """
 Take two files and compare the lines that exist in the files.
 The two files provided are: old_file.txt and new_file.txt.
