@@ -42,12 +42,15 @@ Fields Added: cl2000 -g -z
 2. Ensure Python 3+ is installed
 3. run main.py as follows:
 
+
 - MacOS / Linux
 ```bash
-python3 main.py
+python3 main.py inputs/Old_File.txt inputs/Old_File.txt
 ```
 
 - Windows
 ```bash
-python main.py
+python main.py inputs/Old_File.txt inputs/Old_File.txt
 ```
+
+3a. You may also pass in different input files by modifying the first and second CLI arguments to refer to a different file.
