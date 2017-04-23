@@ -34,7 +34,6 @@ class IO:
 
     def save_tags_to_output(self):
         """Writes the individual Tag objects __str__ definition to an output file"""
-        #print("Exporting file.")
         if not os.path.isdir(self.OUTPUT_FILE_PATH):
             os.mkdir(self.OUTPUT_FILE_PATH)
         with open(path.join(self.OUTPUT_FILE_PATH, 'output.txt'), 'w') as output_file:
@@ -44,22 +43,34 @@ class IO:
                 self.RIGHT_FILE_PATH,
                 self.LEFT_FILE_PATH,
                 len(self.shared_tags),
-                "% " + str((((self.total_fields + self.field_changes) - self.total_fields) / self.total_fields) * 100)
+                self.calculate_file_difference(),
             )
             output_file.write(header_rendered)
             for tag in self.shared_tags:
                 print(tag)
                 output_file.write(str(tag))
 
+    def calculate_file_difference(self):
+        output_schema = "{}%"
+        if self.field_changes < 0:
+            percentage = str((((self.total_fields + self.field_changes) - self.total_fields) / self.total_fields) * 100)
+            return output_schema.format(percentage)
+        else:
+            return output_schema.format(0)
+
 
 class Tag:
     """Abstracts logic surrounding the parsing and data structure of a tag element."""
     def __init__(self, left_tag_line, right_tag_line):
-        self.left_tag_name = self.extract_tag(left_tag_line)
-        self.right_tag_name = self.extract_tag(right_tag_line)
-        self.left_fields = self.extract_field(left_tag_line)
-        self.right_fields = self.extract_field(right_tag_line)
+        left_line = self.tokenize_input_line(left_tag_line)
+        right_line = self.tokenize_input_line(right_tag_line)
+        # print(left_line)
+        self.left_tag_name = left_line['tag_name']
+        self.right_tag_name = right_line['tag_name']
+        self.left_fields = left_line['fields']
+        self.right_fields = right_line['fields']
         if self.is_shared_tag():
+            # Only calculate field omissions/additions if tag is shared between inputs.
             self.omitted_field_values = self.get_field_omissions()
             self.added_field_values = self.get_field_additions()
 
@@ -78,8 +89,7 @@ Fields Added: {}
         output_omitted_field_values = " ".join(self.omitted_field_values)
         output_added_field_values = " ".join(self.added_field_values)
 
-        output_rendered = output_schema.format(output_tag_name, output_left_fields, output_right_fields,
-                                      output_omitted_field_values, output_added_field_values)
+        output_rendered = output_schema.format(output_tag_name, output_left_fields, output_right_fields, output_omitted_field_values, output_added_field_values)
 
         return str(output_rendered)
 
@@ -92,22 +102,19 @@ Fields Added: {}
             return False
 
     @staticmethod
-    def extract_tag(input_line) -> str:
-        """Returns the tag name by splicing an input line."""
-        FIRST_CHILD = 0
-        if input_line is not "":
-            tag = input_line.split(":")[FIRST_CHILD]
-            return tag
-
-    @staticmethod
-    def extract_field(input_line) -> list:
-        """Returns the field values from an input_line."""
-        SECOND_CHILD = 1
+    def tokenize_input_line(input_line):
         NULL_VALUES = ('', '\n')
+        TAG_INDEX = 0
+        FIELDS_INDEX = 1
+        tokenized_line = {
+            'tag_name': '',
+            'fields': '',
+        }
         if input_line not in NULL_VALUES:
-            fields = input_line.split(":")[SECOND_CHILD].replace('\n', '')
-            fields_delimited = fields.split(" ")
-            return [field_value for field_value in fields_delimited if field_value not in NULL_VALUES]
+            input_line_delimited = input_line.replace('\n', '').split(":")
+            tokenized_line['tag_name'] = input_line_delimited[TAG_INDEX]
+            tokenized_line['fields'] = [field for field in input_line_delimited[FIELDS_INDEX].split(" ") if field not in NULL_VALUES]
+        return tokenized_line
 
     def get_field_omissions(self) -> list:
         """Evaluates a tag objects field omissions by comparing existing and new
