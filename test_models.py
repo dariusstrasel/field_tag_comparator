@@ -14,11 +14,15 @@ example_tag2 = """C_LINK_CMD: cl2000 -g -z -w -x --heap=0x800 --stack=0x400 -m l
 
 class TestTagMethods(unittest.TestCase):
 
-    def test_extract_tag(self):
-        self.assertEqual(models.Tag.extract_tag(example_tag), "C_LINK")
+    # def test_extract_tag(self):
+    #     self.assertEqual(models.Tag.extract_tag(example_tag), "C_LINK")
 
-    def test_extract_field(self):
-        self.assertEqual(models.Tag.extract_field(example_tag2), ['cl2000', '-g', '-z', '-w', '-x', '--heap=0x800', '--stack=0x400', '-m', 'link.map'])
+    # def test_extract_field(self):
+    #     self.assertEqual(models.Tag.extract_field(example_tag2), ['cl2000', '-g', '-z', '-w', '-x', '--heap=0x800', '--stack=0x400', '-m', 'link.map'])
+
+    def test_tokenize_input_line(self):
+        output = models.Tag.tokenize_input_line(example_tag)
+        print(output)
 
     def test_is_shared_tag(self):
         tag = models.Tag(example_tag1, example_tag2)
@@ -33,13 +37,13 @@ class TestTagMethods(unittest.TestCase):
         self.assertEquals(tag.get_field_additions(), ['cl2000', '-g', '-z'])
 
 
-class TestIOMethods(unittest.TestCase):
-    os.remove(r"./outputs/output.txt")
-    compare = models.IO(r"./inputs/Old_File.txt", r"./inputs/New_File.txt", r"./outputs/")
-
-    def test_output_file(self):
-
-        self.assertTrue(os.path.isfile(r"./outputs/output.txt"))
+# class TestIOMethods(unittest.TestCase):
+#     os.remove(r"./outputs/output.txt")
+#     compare = models.IO(r"./inputs/Old_File.txt", r"./inputs/New_File.txt", r"./outputs/")
+#
+#     def test_output_file(self):
+#
+#         self.assertTrue(os.path.isfile(r"./outputs/output.txt"))
 
 if __name__ == '__main__':
     unittest.main()
