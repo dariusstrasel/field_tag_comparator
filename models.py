@@ -94,17 +94,20 @@ Fields Added: {}
     @staticmethod
     def extract_tag(input_line) -> str:
         """Returns the tag name by splicing an input line."""
+        FIRST_CHILD = 0
         if input_line is not "":
-            tag = input_line.split(":")[0]
+            tag = input_line.split(":")[FIRST_CHILD]
             return tag
 
     @staticmethod
     def extract_field(input_line) -> list:
         """Returns the field values from an input_line."""
-        if input_line not in ('', '\n'):
-            fields = input_line.split(":")[1].replace('\n', '')
+        SECOND_CHILD = 1
+        NULL_VALUES = ('', '\n')
+        if input_line not in NULL_VALUES:
+            fields = input_line.split(":")[SECOND_CHILD].replace('\n', '')
             fields_delimited = fields.split(" ")
-            return [field_value for field_value in fields_delimited if field_value not in ('', '\n')]
+            return [field_value for field_value in fields_delimited if field_value not in NULL_VALUES]
 
     def get_field_omissions(self) -> list:
         """Evaluates a tag objects field omissions by comparing existing and new
