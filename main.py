@@ -22,7 +22,7 @@ def argument_file_exists(*input_path):
     for file_path in input_path[0]:
         file = str(file_path)
         if os.path.isfile(file):
-            print("%s exists" % file)
+            #print("%s exists" % file)
             pass
         else:
             print("File not found: %s" % (file))
@@ -44,8 +44,6 @@ def main():
     if argument_file_exists([file_one, file_two]):
         compare = Engine(file_one, file_two, r"./outputs/")
         compare.save_output()
-
-
 
 if __name__ == "__main__":
     main()
