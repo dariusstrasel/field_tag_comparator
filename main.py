@@ -19,6 +19,7 @@ import argparse
 
 
 def argument_file_exists(*input_path):
+    """Check if arguments passed thru CLI actually exist."""
     for file_path in input_path[0]:
         file = str(file_path)
         if os.path.isfile(file):
