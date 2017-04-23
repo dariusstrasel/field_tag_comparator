@@ -34,31 +34,22 @@ class IO:
 
     def save_tags_to_output(self):
         """Writes the individual Tag objects __str__ definition to an output file"""
-        print("Exporting file.")
-        if self.file_exists():
-            with open(path.join(self.OUTPUT_FILE_PATH, 'output.txt'), 'w') as output_file:
-                header_schema = """Date: {}, New_File: {}, Old_File: {}, Total Shared Tags: {}, Tag Differences: {}\n"""
-                header_output = header_schema.format(
-                    str(datetime.now()),
-                    self.NEW_FILE_PATH,
-                    self.OLD_FILE_PATH,
-                    len(self.shared_tags),
-                    "% " + str((((self.total_fields + self.field_changes) - self.total_fields) / self.total_fields) * 100)
-                )
-                output_file.write(header_output)
-                for tag in self.shared_tags:
-                    print(tag)
-                    output_file.write(str(tag))
-
-    def file_exists(self):
-        directory = self.OUTPUT_FILE_PATH
-        if os.path.isdir(directory):
-            return True
-        print("No such directory: '%s'\nCreating..." % (directory))
-        os.mkdir(directory)
-        return False
-
-
+        #print("Exporting file.")
+        if not os.path.isdir(self.OUTPUT_FILE_PATH):
+            os.mkdir(self.OUTPUT_FILE_PATH)
+        with open(path.join(self.OUTPUT_FILE_PATH, 'output.txt'), 'w') as output_file:
+            header_schema = """Date: {}, New_File: {}, Old_File: {}, Total Shared Tags: {}, Tag Differences: {}\n"""
+            header_output = header_schema.format(
+                str(datetime.now()),
+                self.NEW_FILE_PATH,
+                self.OLD_FILE_PATH,
+                len(self.shared_tags),
+                "% " + str((((self.total_fields + self.field_changes) - self.total_fields) / self.total_fields) * 100)
+            )
+            output_file.write(header_output)
+            for tag in self.shared_tags:
+                print(tag)
+                output_file.write(str(tag))
 
 
 class Tag:
@@ -114,7 +105,6 @@ Fields Added: {}
             fields = input_line.split(":")[1].replace('\n', '')
             fields_delimited = fields.split(" ")
             return [field_value for field_value in fields_delimited if field_value not in ('', '\n')]
-
 
     def get_field_omissions(self) -> list:
         """Evaluates a tag objects field omissions by comparing existing and new
