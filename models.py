@@ -119,11 +119,15 @@ Fields Added: {}
     def get_field_omissions(self) -> list:
         """Evaluates a tag objects field omissions by comparing existing and new
         field values."""
-        field_omissions = []
-        for field in self.left_fields:
-            if field not in self.right_fields:
-                field_omissions.append(field)
-        return field_omissions
+        right_fields_copy = self.right_fields[:]
+        omissions = []
+        for left_field in self.left_fields:
+            try:
+                right_fields_copy.remove(left_field)
+            except ValueError:
+                # If field can't be removed, then is does not exist!
+                omissions.append(left_field)
+        return omissions
 
     def get_field_additions(self) -> list:
         """Evaluates a tag objects field additions by comparing existing and new
